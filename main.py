@@ -1,3 +1,4 @@
+#Calculated Price Inclusive of taxes for each product
 import pandas as pd
 import sys,json
 
@@ -13,13 +14,18 @@ def read_csv(csv_path):
 def display_fare_details(fare_details_df):
     print(fare_details_df)
 
-def calc_cost_details(row,super_market_df):
+def calc_cost_details(row,super_market_df,menu):
     min_rate = super_market_df[super_market_df["Product"] == row["Product"]]["min"].values[0]
+    menu.at[row.name,"MinimumRate"] =  min_rate
     return row["Quantity"] * min_rate
+
+def calc_tax_details(price,tax):
+    return price*tax+price
 
 def get_cost_details(supermarket_products, menu):
     supermarket_products["min"] = supermarket_products[["SevenEleven($)","Walmart($)","Tesco($)"]].min(axis=1)
-    menu["price"] = menu.apply(calc_cost_details,args=(supermarket_products,),axis=1)
+    menu["Price"] = menu.apply(calc_cost_details,args=(supermarket_products,menu),axis=1)
+    menu["Price(IncTax)"] = menu["Price"].apply(calc_tax_details,args=(0.1,))
     return menu
 
 def main():
