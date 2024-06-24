@@ -13,14 +13,14 @@ def read_csv(csv_path):
 def display_fare_details(fare_details_df):
     print(fare_details_df)
 
-def calc_total(row,menu):
-    total = menu.loc[row.name,"Quantity"]*(row["min"]) if row.name in menu.index else 0
-    return total
- 
+def calc_cost_details(row,super_market_df):
+    min_rate = super_market_df[super_market_df["Product"] == row["Product"]]["min"].values[0]
+    return row["Quantity"] * min_rate
+
 def get_cost_details(supermarket_products, menu):
     supermarket_products["min"] = supermarket_products[["SevenEleven($)","Walmart($)","Tesco($)"]].min(axis=1)
-    supermarket_products["price"] = supermarket_products.apply(calc_total,args=(menu,),axis=1)
-    return pd.concat([supermarket_products,menu[["Quantity"]]],axis=1)
+    menu["price"] = menu.apply(calc_cost_details,args=(supermarket_products,),axis=1)
+    return menu
 
 def main():
     config_file = read_json(sys.argv[1])
