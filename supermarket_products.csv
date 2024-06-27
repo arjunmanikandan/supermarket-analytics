@@ -1,6 +1,16 @@
-Product,SevenEleven($),Walmart($),Tesco($)
-Apples,50,55,60
-Bread,30,35,32
-Cheese,120,110,115
-Chocolate,25,30,28
-Eggs,45,50,48
+Product,Store,State,Price($)
+Apples,SevenEleven,California,1.5
+Apples,Walmart,Texas,2.0
+Apples,Tesco,New York,3.5
+Bread,SevenEleven,Florida,2.5
+Bread,Walmart,Illinois,1.8
+Bread,Tesco,California,1.5
+Cheese,SevenEleven,Texas,2.0
+Cheese,Walmart,New York,3.5
+Cheese,Tesco,Florida,2.5
+Chocolate,SevenEleven,Illinois,1.8
+Chocolate,Walmart,California,1.5
+Chocolate,Tesco,Texas,2.0
+Eggs,SevenEleven,New York,3.5
+Eggs,Walmart,Florida,2.5
+Eggs,Tesco,Illinois,1.8
