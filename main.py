@@ -10,33 +10,27 @@ def read_csv(csv_path):
     df = pd.read_csv(csv_path)
     return df
 
-def display_df(menu_df):
-    print(menu_df)
+def display_df(least_prod_cost_df):
+    print(pd.concat(least_prod_cost_df,ignore_index=True))
 
-def calc_cost_details(row,supermarket_products):
-    min_idx = supermarket_products[supermarket_products["Product"] == row["Product"]]["Price($)"].idxmin()
+def extract_cheapest_prod_price(row,menu_taxes_df):
+    minimum_price_idx = menu_taxes_df[menu_taxes_df["Product"]==row["Product"]]["TotalCost($)"].idxmin()
+    return menu_taxes_df.loc[[minimum_price_idx]]
+
+def calc_cost_details(row):
+    price = row["Price($)"]*row["Quantity"]
     columns_dict = {
-        "Store":supermarket_products.at[min_idx,"Store"],
-         "State":supermarket_products.at[min_idx,"State"],
-         "MinimumRate($)":supermarket_products.at[min_idx,"Price($)"]
-
-    }
-    return pd.Series(columns_dict)
-
-def calc_tax_details(row):
-    product_price = row["MinimumRate($)"]*row["Quantity"]
-
-    columns_dict = {
-        "Price(IncTax)($)": product_price*row["Tax(%)"]/100 + product_price
+        "TotalCost($)": price + row["Tax(%)"]/100 * price
     }
     return pd.Series(columns_dict)
     
 def get_cost_details(supermarket_products, menu,taxes):
-    menu[["Store","State","MinimumRate($)"]] = menu.apply(calc_cost_details,args=(supermarket_products,),axis=1)
-    menu_taxes = pd.merge(menu,taxes,on=["State","Product"],how="left")
-    menu_taxes.fillna({"Tax(%)":0}, inplace=True)
-    menu_taxes["Price(IncTax)($)"] =  menu_taxes.apply(calc_tax_details,axis=1)
-    return menu_taxes
+    products_menu_df = pd.merge(supermarket_products,menu,on=["Product"],how="outer")
+    menu_taxes_df = pd.merge(products_menu_df,taxes,on=["Product","State"],how="left").fillna(0)
+    menu_taxes_df["TotalCost($)"] = menu_taxes_df.apply(calc_cost_details,axis=1)
+    menu_dfs = menu.apply(extract_cheapest_prod_price,args=(menu_taxes_df,),axis=1)
+    least_prod_cost_df = map(lambda df : df,menu_dfs)
+    return list(least_prod_cost_df)
 
 def extract_csv_contents(config):
     supermarket_products = read_csv(config["supermarket_products_path"])
@@ -50,9 +44,9 @@ def extract_csv_contents(config):
     return csv_data
 
 def main():
-    config = read_json("config.json")
+    config = read_json(sys.argv[1])
     csv_data = extract_csv_contents(config)
-    menu_df = get_cost_details(csv_data["products_data"], csv_data["menu_data"],csv_data["tax_data"])
-    display_df(menu_df)
+    least_prod_cost_df = get_cost_details(csv_data["products_data"], csv_data["menu_data"],csv_data["tax_data"])
+    display_df(least_prod_cost_df)
 
 main()
