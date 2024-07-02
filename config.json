@@ -1,5 +1,6 @@
 {
     "supermarket_products_path":"supermarket_products.csv",
     "menu_path":"menu.csv",
-    "state_taxes_path":"state_taxes.csv"
+    "state_taxes_path":"state_taxes.csv",
+    "transportation_charges_path":"transportation_charges.csv"
 }
