@@ -50,19 +50,22 @@ def calc_total_cost(row):
     }
     return pd.Series(columns_dict)
 
-#Reduced the number of parameters
+def calc_minimum_total_cost(menu_charges_df):
+    menu_charges_df.reset_index(drop=True)
+    menu_total_cost_df = menu_charges_df.groupby("Product").min()
+    return menu_total_cost_df.reset_index()
+
+#TotalCost =  (((Price*Quantity) + Tax ) - discount_value) + PriceIncTransportation
 def get_cost_details(csv_data):
     products_menu_df = pd.merge(csv_data["products_data"],csv_data["menu_data"],on=["Product"],how="outer")
     menu_taxes_df = pd.merge(products_menu_df,csv_data["tax_data"],on=["Product","State"],how="left").fillna(0)
     menu_taxes_df["Cost($)"] = menu_taxes_df.apply(calc_cost_details,axis=1)
-    menu_dfs = csv_data["menu_data"].apply(extract_cheapest_prod_price,args=(menu_taxes_df,),axis=1)
-    least_prod_cost_df = list(map(lambda df : df,menu_dfs))
-    least_prod_cost_df = pd.concat(least_prod_cost_df,ignore_index=True)
-    menu_charges_df = pd.merge(least_prod_cost_df,csv_data["transportation_data"],on=["State"],how="left")
+    menu_charges_df = pd.merge(menu_taxes_df,csv_data["transportation_data"],on=["State"],how="left")
     menu_charges_df["PriceIncTransportation($)"] = menu_charges_df.apply(calc_transportation_charges,args=(csv_data["transportation_data"],),axis=1)
     menu_charges_df[["Discount(%)","DiscountedPrice($)"]] = menu_charges_df.apply(calc_discount,args=(csv_data["discount_data"],),axis=1)
     menu_charges_df["TotalCost($)"] = menu_charges_df.apply(calc_total_cost,axis=1)
-    return menu_charges_df
+    menu_charges_df = menu_charges_df.drop(menu_charges_df[menu_charges_df["Quantity"]==0].index)
+    return calc_minimum_total_cost(menu_charges_df)
 
 def extract_csv_contents(config):
     supermarket_products = read_csv(config["supermarket_products_path"])
