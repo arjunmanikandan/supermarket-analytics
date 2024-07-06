@@ -1,0 +1,16 @@
+Product,State,SellingPrice($)
+Apples,NorthDakota,3.75
+Apples,Alabama,3.5
+Apples,SouthCarolina,3.5
+Bread,Mississippi,4.75
+Bread,Utah,5
+Bread,NorthCarolina,3.75
+Cheese,Washington,3
+Cheese,Pennsylvania,4.5
+Cheese,Oregon,3
+Chocolate,NewJersey,7
+Chocolate,Nevada,7
+Chocolate,Nebraska,6.5
+Eggs,Wisconsin,4
+Eggs,Delaware,5
+Eggs,Kansas,4.25
