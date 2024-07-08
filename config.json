@@ -1,7 +1,7 @@
 {
     "buying_prices_path":"buying_prices.csv",
     "menu_path":"menu.csv",
-    "state_taxes_path":"state_taxes.csv",
+    "location_taxes_path":"location_taxes.csv",
     "transportation_charges_path":"transportation_charges.csv",
     "bulk_discount_path":"bulk_discount.csv",
     "selling_prices_path":"selling_prices.csv",

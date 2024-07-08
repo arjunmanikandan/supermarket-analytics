@@ -1,4 +1,4 @@
-Product,State,SellingPrice($)
+Product,Location,SellingPrice($)
 Apples,NorthDakota,3.75
 Apples,Alabama,3.5
 Apples,SouthCarolina,3.5

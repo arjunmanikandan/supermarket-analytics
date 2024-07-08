@@ -14,7 +14,7 @@ def get_max_profit(group):
 def calc_profit(csv_data,menu_total_cost_df,config):
     selling_prices_df = pd.merge(menu_total_cost_df,csv_data["selling_prices_data"],on=["Product"],how="left")
     selling_prices_df["SellingPrice($)Per1000Units"] =  selling_prices_df["SellingPrice($)"] * config["products_quantity"]
-    selling_prices_df = selling_prices_df.rename(columns={"State_x":"BuyingFrom(State)","State_y":"SellingIn(State)"})
+    selling_prices_df = selling_prices_df.rename(columns={"Location_x":"BuyingFrom(State)","Location_y":"SellingIn(State)"})
     selling_prices_df["Profit($)"] = selling_prices_df["SellingPrice($)Per1000Units"]-selling_prices_df["CostPrice($)"]
     selling_prices_df = selling_prices_df.groupby("Product").apply(get_max_profit,include_groups=False)
     return selling_prices_df.reset_index()

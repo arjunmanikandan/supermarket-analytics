@@ -12,7 +12,7 @@ def read_csv(csv_path):
     return df
 
 def display_df(menu_charges_df):
-    menu_charges_df = menu_charges_df[['Product', 'Store', 'State', 'Rate($)', 'Quantity','Price($)', 
+    menu_charges_df = menu_charges_df[['Product', 'Store', 'Location', 'Rate($)', 'Quantity','Price($)', 
         'Discount(%)','DiscountedPrice($)','Tax(%)','PriceIncTax($)','TransportationCharges($)', 
         'PriceIncTransportation($)','CostPrice($)']]
     return menu_charges_df
@@ -28,7 +28,7 @@ def calc_cost_details(row):
     return pd.Series(columns_dict)
 
 def calc_transportation_charges(row,charges):
-    charges_index = charges[charges["State"] == row["State"]].index
+    charges_index = charges[charges["Location"] == row["Location"]].index
     transport_charges = charges.at[charges_index[0],"TransportationCharges($)"]
     transportation_charges = math.ceil(row["Quantity"]/1000) * transport_charges
     columns_dict = {
@@ -55,9 +55,9 @@ def calc_total_cost(row):
 
 def get_cost_details(csv_data):
     products_menu_df = pd.merge(csv_data["cost_prices_data"],csv_data["menu_data"],on=["Product"],how="outer")
-    menu_taxes_df = pd.merge(products_menu_df,csv_data["tax_data"],on=["Product","State"],how="left").fillna(0)
+    menu_taxes_df = pd.merge(products_menu_df,csv_data["tax_data"],on=["Product","Location"],how="left").fillna(0)
     menu_taxes_df["Price($)"] = menu_taxes_df.apply(calc_cost_details,axis=1)
-    menu_charges_df = pd.merge(menu_taxes_df,csv_data["transportation_data"],on=["State"],how="left")
+    menu_charges_df = pd.merge(menu_taxes_df,csv_data["transportation_data"],on=["Location"],how="left")
     menu_charges_df["PriceIncTransportation($)"] = menu_charges_df.apply(calc_transportation_charges,args=(csv_data["transportation_data"],),axis=1)
     menu_charges_df[["Discount(%)","DiscountedPrice($)"]] = menu_charges_df.apply(calc_discount,args=(csv_data["discount_data"],),axis=1)
     menu_charges_df["PriceIncTax($)"] = menu_charges_df.apply(calc_total_cost,axis=1)
@@ -68,14 +68,14 @@ def get_cost_details(csv_data):
 def extract_csv_contents(config):
     buying_prices = read_csv(config["buying_prices_path"])
     menu = read_csv(config["menu_path"])
-    state_taxes = read_csv(config["state_taxes_path"])
+    location_taxes = read_csv(config["location_taxes_path"])
     transportation_charges = read_csv(config["transportation_charges_path"])
     discount_percentage = read_csv(config["bulk_discount_path"])
     selling_prices = read_csv(config["selling_prices_path"])
     csv_data = {
         "cost_prices_data":buying_prices,
         "menu_data":menu,
-        "tax_data":state_taxes,
+        "tax_data":location_taxes,
          "transportation_data":transportation_charges,
          "discount_data":discount_percentage,
          "selling_prices_data":selling_prices,
