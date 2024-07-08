@@ -1,16 +1,16 @@
 Product,Location,Tax(%)
-Apples,California,2
-Apples,Texas,2.5
-Apples,New York,5
-Bread,Florida,1.2
-Bread,Illinois,1.87
-Bread,California,4.5
-Cheese,Texas,3
-Cheese,New York,1.2
-Cheese,Florida,1.75
-Chocolate,Illinois,1
-Chocolate,California,4.97
-Chocolate,Texas,3.5
-Eggs,New York,5.5
-Eggs,Florida,3.2
-Eggs,Illinois,1.89
+Apples,Chennai,2
+Apples,Bangalore,2.5
+Apples,Delhi,5
+Bread,Mumbai,1.2
+Bread,Hyderabad,1.87
+Bread,Chennai,4.5
+Cheese,Bangalore,3
+Cheese,Delhi,1.2
+Cheese,Mumbai,1.75
+Chocolate,Hyderabad,1
+Chocolate,Chennai,4.97
+Chocolate,Bangalore,3.5
+Eggs,Delhi,5.5
+Eggs,Mumbai,3.2
+Eggs,Hyderabad,1.89

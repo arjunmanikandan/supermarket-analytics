@@ -1,16 +1,16 @@
 Product,Store,Location,Rate($)
-Apples,SevenEleven,California,1.5
-Apples,Walmart,Texas,2.0
-Apples,Tesco,New York,3.5
-Bread,SevenEleven,Florida,2.5
-Bread,Walmart,Illinois,1.8
-Bread,Tesco,California,1.5
-Cheese,SevenEleven,Texas,2.0
-Cheese,Walmart,New York,3.5
-Cheese,Tesco,Florida,2.5
-Chocolate,SevenEleven,Illinois,1.8
-Chocolate,Walmart,California,1.5
-Chocolate,Tesco,Texas,2.0
-Eggs,SevenEleven,New York,3.5
-Eggs,Walmart,Florida,2.5
-Eggs,Tesco,Illinois,1.8
+Apples,Spencer,Chennai,1.5
+Apples,DMart,Bangalore,2.0
+Apples,RelianceFresh,Delhi,3.5
+Bread,Spencer,Mumbai,2.5
+Bread,DMart,Hyderabad,1.8
+Bread,RelianceFresh,Chennai,1.5
+Cheese,Spencer,Bangalore,2.0
+Cheese,DMart,Delhi,3.5
+Cheese,RelianceFresh,Mumbai,2.5
+Chocolate,Spencer,Hyderabad,1.8
+Chocolate,DMart,Chennai,1.5
+Chocolate,RelianceFresh,Bangalore,2.0
+Eggs,Spencer,Delhi,3.5
+Eggs,DMart,Mumbai,2.5
+Eggs,RelianceFresh,Hyderabad,1.8
