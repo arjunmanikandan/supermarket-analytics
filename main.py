@@ -54,7 +54,7 @@ def calc_total_cost(row):
     return pd.Series(columns_dict)
 
 def get_cost_details(csv_data):
-    products_menu_df = pd.merge(csv_data["products_data"],csv_data["menu_data"],on=["Product"],how="outer")
+    products_menu_df = pd.merge(csv_data["cost_prices_data"],csv_data["menu_data"],on=["Product"],how="outer")
     menu_taxes_df = pd.merge(products_menu_df,csv_data["tax_data"],on=["Product","State"],how="left").fillna(0)
     menu_taxes_df["Price($)"] = menu_taxes_df.apply(calc_cost_details,axis=1)
     menu_charges_df = pd.merge(menu_taxes_df,csv_data["transportation_data"],on=["State"],how="left")
@@ -66,19 +66,19 @@ def get_cost_details(csv_data):
     return menu_charges_df.reset_index(drop=True)
 
 def extract_csv_contents(config):
-    supermarket_products = read_csv(config["supermarket_products_path"])
+    buying_prices = read_csv(config["buying_prices_path"])
     menu = read_csv(config["menu_path"])
     state_taxes = read_csv(config["state_taxes_path"])
     transportation_charges = read_csv(config["transportation_charges_path"])
     discount_percentage = read_csv(config["bulk_discount_path"])
-    products_selling_prices = read_csv(config["products_selling_prices_path"])
+    selling_prices = read_csv(config["selling_prices_path"])
     csv_data = {
-        "products_data":supermarket_products,
+        "cost_prices_data":buying_prices,
         "menu_data":menu,
         "tax_data":state_taxes,
          "transportation_data":transportation_charges,
          "discount_data":discount_percentage,
-         "selling_prices_data":products_selling_prices,
+         "selling_prices_data":selling_prices,
     }
     return csv_data
 
