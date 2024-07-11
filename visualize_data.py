@@ -1,27 +1,32 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np  
-from calc_profit import product_profits
+import numpy as np
 
+def create_bar_labels(cost_prices,selling_prices,bar_width):
+    for i, (cost_price, sell_price) in enumerate(zip(cost_prices, selling_prices)):
+        plt.text(i - bar_width/2, cost_price, f"${cost_price}", ha='center', va='bottom')
+        plt.text(i + bar_width/2, sell_price, f"${sell_price}", ha='center', va='bottom')
 
-# Visualize the cost prices and selling price for all products across a state
-def visualize_product_costprices(product_profits_df):
-    products = product_profits_df["Product"]
+#Renaming Individual x labels
+def restructure_xticks(products):
+    products_count = {}
+    list(map(lambda product: products_count.update({product: products_count.get(product, 0) + 1}), products))
+    products_count_labels = [f"{product}\nWeek{i}" for product, count in products_count.items() for i in range(1, count + 1)]
+    return products_count_labels
+
+def visualize_df(product_profits_df):
+    product_indices,bar_width  = np.arange(len(product_profits_df["Product"])),0.4
+    products_count_labels = restructure_xticks(product_profits_df["Product"])
     cost_prices = product_profits_df["CostPrice($)"]
     selling_prices = product_profits_df["SellingPrice($)Per1000Units"]
-    product_indices = np.arange(len(products))
-    plt.bar(product_indices - 0.2, cost_prices, 0.4, label = 'CostPrice($)') 
-    plt.bar(product_indices + 0.2, selling_prices, 0.4, label = 'SellingPrice($)')
-    plt.xlabel("Products") 
-    plt.ylabel("Price") 
-    plt.title("Product Profitability(1000units)")
-    plt.xticks(product_indices,products) 
+    create_bar_labels(cost_prices,selling_prices,bar_width)
+    plt.bar(product_indices - bar_width/2, cost_prices, bar_width, label='Cost Price')
+    plt.bar(product_indices + bar_width/2, selling_prices, bar_width, label='Selling Price')
+    plt.title("Product Profitability (1000 units)")    
+    plt.xlabel("Products")
+    plt.ylabel("Price ($)")
+    plt.xticks(product_indices,products_count_labels)
+    plt.ylim(0, max(max(cost_prices), max(selling_prices)) + 5000)
+    plt.tight_layout()
     plt.legend()
     plt.show()
-
-def visualize():
-    product_profits_df = product_profits()
-    visualize_product_costprices(product_profits_df)
-
-if __name__ == "__main__":
-    visualize()

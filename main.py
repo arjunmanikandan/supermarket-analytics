@@ -1,6 +1,12 @@
 import pandas as pd
 import sys,json,math,os
 from dotenv import load_dotenv
+from calc_profit import product_profits
+from visualize_data import visualize_df
+
+def display_df(df_dict):
+    print(df_dict["menu_cost_price_df"])
+    print(df_dict["product_profit_df"])
 
 def read_json(json_path):
     with open(json_path,"r") as file:
@@ -11,15 +17,11 @@ def read_csv(csv_path):
     df = pd.read_csv(csv_path)
     return df
 
-def display_df(menu_charges_df):
+def get_df(menu_charges_df):
     menu_charges_df = menu_charges_df[['Product', 'Store', 'Location', 'Rate($)', 'Quantity','Price($)', 
         'Discount(%)','DiscountedPrice($)','Tax(%)','PriceIncTax($)','TransportationCharges($)', 
-        'PriceIncTransportation($)','CostPrice($)']]
+        'PriceIncTransportation($)','Week','CostPrice($)']]
     return menu_charges_df
-
-def extract_cheapest_prod_price(row,menu_taxes_df):
-    minimum_price_idx = menu_taxes_df[menu_taxes_df["Product"]==row["Product"]]["Price($)"].idxmin()
-    return menu_taxes_df.loc[[minimum_price_idx]]
 
 def calc_cost_details(row):
     columns_dict = {
@@ -88,8 +90,15 @@ def main():
     config = read_json(config_path)
     csv_data = extract_csv_contents(config)
     least_prod_cost_df = get_cost_details(csv_data)
-    return display_df(least_prod_cost_df)
+    menu_cost_price_df=get_df(least_prod_cost_df)
+    product_profit_df = product_profits(csv_data,menu_cost_price_df,config)
+    visualize_df(product_profit_df)
+    df_dict ={
+        "menu_cost_price_df":menu_cost_price_df,
+        "product_profit_df":product_profit_df
+    }
+    return df_dict
 
 if __name__ == "__main__":
-    final_df = main()
-    print(final_df)
+    df_dict = main()
+    display_df(df_dict)
