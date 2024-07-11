@@ -7,7 +7,7 @@ from visualize_data import visualize_df
 def display_df(df_dict):
     print(df_dict["menu_cost_price_df"])
     print(df_dict["product_profit_df"])
-
+    
 def read_json(json_path):
     with open(json_path,"r") as file:
         file_paths = json.load(file)
@@ -20,7 +20,7 @@ def read_csv(csv_path):
 def get_df(menu_charges_df):
     menu_charges_df = menu_charges_df[['Product', 'Store', 'Location', 'Rate($)', 'Quantity','Price($)', 
         'Discount(%)','DiscountedPrice($)','Tax(%)','PriceIncTax($)','TransportationCharges($)', 
-        'PriceIncTransportation($)','Week','CostPrice($)']]
+        'PriceIncTransportation($)','Date','CostPrice($)']]
     return menu_charges_df
 
 def calc_cost_details(row):
@@ -65,6 +65,7 @@ def get_cost_details(csv_data):
     menu_charges_df["PriceIncTax($)"] = menu_charges_df.apply(calc_total_cost,axis=1)
     menu_charges_df["CostPrice($)"] = menu_charges_df["PriceIncTax($)"] + menu_charges_df["PriceIncTransportation($)"]
     menu_charges_df = menu_charges_df.drop(menu_charges_df[menu_charges_df["Quantity"]==0].index)
+    menu_charges_df["Date"] = pd.to_datetime(menu_charges_df["Date"])
     return menu_charges_df.reset_index(drop=True)
 
 def extract_csv_contents(config):

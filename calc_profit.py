@@ -5,12 +5,14 @@ def display_write_df(products_profits_df):
     return products_profits_df
 
 def get_max_profit(group):
-    max_profit_indexes = group.groupby(["Week"])["Profit($)"].idxmax().values
+    max_profit_indexes = group.groupby(["Date"])["Profit($)"].idxmax().values
     return group.loc[max_profit_indexes]
 
 #Selling prices of all products calculated for 1000 units 
 def calc_profit(csv_data,menu_cost_price_df,config):
-    selling_prices_df = pd.merge(menu_cost_price_df,csv_data["selling_prices_data"],on=["Product","Week"],how="left")
+    selling_prices_data = csv_data["selling_prices_data"]
+    selling_prices_data["Date"] = pd.to_datetime(selling_prices_data["Date"])
+    selling_prices_df = pd.merge(menu_cost_price_df,csv_data["selling_prices_data"],on=["Product","Date"],how="left")
     selling_prices_df["SellingPrice($)Per1000Units"] =  selling_prices_df["SellingPrice($)"] * config["products_quantity"]
     selling_prices_df["Profit($)"] = selling_prices_df["SellingPrice($)Per1000Units"]-selling_prices_df["CostPrice($)"]
     selling_prices_df = selling_prices_df.rename(columns={"Location_x":"BuyingFrom(City)","Location_y":"SellingInState"})
