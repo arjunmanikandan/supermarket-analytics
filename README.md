@@ -21,4 +21,8 @@ python -m venv .venv
 pip install pandas numpy matplotlib python-dotenv
 
 # Usage
+Linux
 CONFIG_PATH="config.json" python3 main.py
+Windows
+set CONFIG_PATH="config.json" && python main.py
+
